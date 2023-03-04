@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+    <canvas id="GameCanvas" width="500px" height="500px"></canvas>
+
+    <script>
+        var CanvasContext;
+        var Canvas;
+
+        window.onload = function () {
+            Canvas = document.getElementById('GameCanvas');
+            CanvasContext = Canvas.getContext("2d");
+            document.addEventListener('keydown', keyPush);
+            setInterval(Game, 2000 / 15);
+        }
+
+        var gameSize = 20;
+        var xv = yv = 0;
+        var px = py = 10;
+        var ax = ay = 15;
+        var trail = [];
+        var tail = 2    
+
+        function Game() {
+            px += xv;
+            py += yv;
+
+            if (px < 0) {
+                px = gameSize - 1
+            }
+
+            if (px > gameSize - 1) {
+                px = 0
+            }
+
+            if (py < 0) {
+                py = gameSize - 1
+            }
+
+            if (py > gameSize - 1) {
+                py = 0
+            }
+
+
+            CanvasContext.fillStyle = "black";
+            CanvasContext.fillRect(0, 0, Canvas.width, Canvas.height);
+
+            CanvasContext.fillStyle = "lime";
+            for (var i = 0; i < trail.length; i++) {
+                CanvasContext.fillRect(trail[i].x * gameSize, trail[i].y * gameSize, gameSize - 2, gameSize - 2)
+                if (trail[i].x == px && trail[i].y == py) {
+                    tail = 2
+                }
+
+            }
+
+            trail.push({ x: px, y: py })
+            while (trail.length > tail) {
+                trail.shift();
+            }
+
+            CanvasContext.fillStyle = 'red';
+            CanvasContext.fillRect(ax * gameSize, ay * gameSize, gameSize - 2, gameSize - 2)
+
+            if (ax == px && ay == py) {
+                tail++;
+                ax = Math.floor(Math.random() * gameSize);
+                ay = Math.floor(Math.random() * gameSize);
+            }
+        }
+
+        function keyPush(e) {
+            if (e.keyCode == 37) {
+                xv = -1;
+                yv = 0
+            }
+            if (e.keyCode == 38) {
+                xv = 0;
+                yv = -1
+            }
+            if (e.keyCode == 39) {
+                xv = 1;
+                yv = 0
+            }
+            if (e.keyCode == 40) {
+                xv = 0;
+                yv = 1
+            }
+        }
+    </script>
+</body>
+
+</html>
